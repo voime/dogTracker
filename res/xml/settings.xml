@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:summary="Vali siit kaelarihma number" android:key="number" android:title="Vali number"></EditTextPreference>
+    <CheckBoxPreference android:title="Kompass" android:key="compass" android:summary="Näita kompassi" android:enabled="true"></CheckBoxPreference>
+    <ListPreference android:title="Vaade" android:summary="Kaardi või Satteliit" 
+        android:key="maptype" android:entries="@array/maptypeArray" android:entryValues="@array/maptypeValues" android:defaultValue="1"/>  
+</PreferenceScreen>

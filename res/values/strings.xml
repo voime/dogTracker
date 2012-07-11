@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Koeraradar</string>
+    <string name="title_activity_show_map">Koeraradar</string>
+    <string-array name="maptypeArray">  
+	   <item>Kaardivaade</item>  
+	   <item>Sateliitvaade</item>  	  
+	</string-array>
+	<string-array name="maptypeValues">  
+	   <item>1</item>  
+	   <item>2</item>  
+	</string-array>
+	<string name="set_preferences">Seaded</string> 
+</resources>
