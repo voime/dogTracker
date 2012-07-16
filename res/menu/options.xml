@@ -1,11 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
    <item android:title="Seaded" android:id="@+id/settings"></item>
-   <item android:title="Saada" android:id="@+id/send"></item>
-   <item android:id="@+id/opts" android:title="Mine">
-        <menu>
-       		<item android:id="@+id/mypos" android:title="Minu asukohta"></item>
-       		<item android:id="@+id/dogpos" android:title="Koera asukohta"></item>
-       		<item android:id="@+id/exit" android:title="Välju programmist"></item>
-        </menu>
-    </item>
+   <item android:title="SMS" android:id="@+id/send"></item>
+   <item android:id="@+id/about" android:title="Teave"></item>
+    <item android:id="@+id/mypos" android:title="Mina"></item>
+    <item android:id="@+id/refresh" android:title="Uuenda"></item>
+    <item android:id="@+id/dogpos" android:title="Koer"></item>
+    
 </menu>

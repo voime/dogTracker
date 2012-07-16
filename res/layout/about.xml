@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.43"
+        android:gravity="center"
+        android:text="See on koeraradari programm."
+        android:textSize="20sp" />
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_gravity="center"
+    android:layout_weight="0.87"
+    android:gravity="center"
+    android:text="Toimib kaelarihmaga Tracker Dog GPS TTA-310i
+Orginaaltarkvara www.trackerhunter.com
+Nende aluskaart ja programmi keerukus aga ei sobinud ning pidasin seda ka liiga kalliks.
+See tarkvara kasutab Google kaarti ja on lihtne.
+Suhtleb rihmaga ainult sõnumite teel.
+Näitab koera asukohti kaardil sissetulnud sõnumite pealt. Kui tahad punkte kustutada telefonist vastavad kustuta sõnumid ära." />
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="123dp"
+    android:layout_gravity="bottom"
+    android:gravity="center"
+    android:text="Kui tahad ise ka arendada vaata 
+https://github.com/voime/dogTracker
+Ettepanekud avoime@gmail.com
+Kui tahad raha maksta siis
+Swedpank 1106558248
+Lugupidamisega Arvi Võime" />
+
+
+</LinearLayout>

@@ -6,13 +6,12 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
 public class MyOverlays extends ItemizedOverlay<OverlayItem> {
 
-	private static int maxNum = 10;
+	private static int maxNum = 5;
 	private OverlayItem overlays[] = new OverlayItem[maxNum];
 	private int index = 0;
 	private boolean full = false;
@@ -56,9 +55,9 @@ public class MyOverlays extends ItemizedOverlay<OverlayItem> {
 
 	protected boolean onTap(int index) {
 		OverlayItem overlayItem = overlays[index];
-		GeoPoint point = this.overlays[index].getPoint();
+		//GeoPoint point = this.overlays[index].getPoint();
 		Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage("Asukoht: " + point);
+		builder.setMessage("Punkt");
 		builder.setCancelable(true);
 		builder.setPositiveButton("Jah ma olen nõus", new OkOnClickListener());
 		builder.setNegativeButton("Ei ma ei soovi", new CancelOnClickListener());

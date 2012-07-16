@@ -1,12 +1,15 @@
 package com.voime.koeraradar;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
+
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -20,6 +23,7 @@ import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -27,14 +31,14 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 
 
 
 public class ShowMap extends MapActivity {
-    public static final String PREFS_NAME = "koeraradar";
+    
+	public static final String PREFS_NAME = "koeraradar";
 	public MapController mapController;
 	private static MapView mapView;
 	private LocationManager locationManager;
@@ -57,30 +61,38 @@ public class ShowMap extends MapActivity {
 	
 	private int sms_jrk;
 	
+	
+	IntentFilter intentFilter;
+	private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
+		        @Override
+		        public void onReceive(Context context, Intent intent) {
+		    		Toast.makeText(getApplicationContext(), "Saabus sõnum ja uuendan asukohta!", Toast.LENGTH_LONG).show();
+		        	updateDogs();
+		        }
+	};
+	
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.main); // bind the layout to the activity
-		
+        //---intent to filter for SMS messages received---
+       
+		intentFilter = new IntentFilter();
+        intentFilter.addAction("SMS_RE");
+
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		//maptype = prefs.getString("maptype", null);
 		rihma_nr = prefs.getString("number", null);
-		Toast.makeText(getApplicationContext(), "Number on  " + rihma_nr, Toast.LENGTH_LONG).show();
+		if (rihma_nr != null){
+			Toast.makeText(getApplicationContext(), "Number on  " + rihma_nr, Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(getApplicationContext(), "Määra seadete alt rihma number", Toast.LENGTH_LONG).show();
+		}
 		// Configure the Map
 
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		// see on tõstetud onresume alla
-		/*
-		if (maptype.equals("2")){
-			mapView.setSatellite(true);
-		}else{
-			mapView.setSatellite(false);			
-		}
-		*/
-		
 		mapController = mapView.getController();
-		
 		// Restore preferences
 	    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 	    int zoom = settings.getInt("zoom", 14);
@@ -98,7 +110,7 @@ public class ShowMap extends MapActivity {
 						myLocationOverlay.getMyLocation());
 			}
 		});
-		
+
 		my_position = myLocationOverlay.getMyLocation();
 		Drawable mydrawable = this.getResources().getDrawable(R.drawable.point);
 		myoverlay = new MyOverlays(this, mydrawable);
@@ -108,8 +120,7 @@ public class ShowMap extends MapActivity {
 		Drawable dogdrawable = this.getResources().getDrawable(R.drawable.dog);
 		dogoverlay = new DogOverlay(dogdrawable,this);
 		
-		// loen sõnumitest koerad peale
-		readDogsSMS();
+		registerReceiver(intentReceiver, intentFilter);
 		
 	}
 
@@ -129,6 +140,15 @@ public class ShowMap extends MapActivity {
 			//mapController.animateTo(point); // mapController.setCenter(point);
 			my_position = point;
 			//Toast.makeText(getApplicationContext(), "liikus: " + point, Toast.LENGTH_LONG).show();
+			TextView txt = (TextView)findViewById(R.id.MyTextView);			
+			if (dog_position != null) {
+				CharSequence sisu = "Kaugus koerani " + getDistance(my_position, dog_position) + " meetrit";
+				txt.setText(sisu);
+			}else{
+				CharSequence sisu = "Kaugust ei saa arvutada";
+				txt.setText(sisu);
+			}
+			
 		}
 
 		@Override
@@ -162,8 +182,11 @@ public class ShowMap extends MapActivity {
 	
 	@Override
 	protected void onResume() {
-		super.onResume();
-		myLocationOverlay.enableMyLocation();
+		 //---register the receiver---
+       // registerReceiver(intentReceiver, intentFilter);
+        super.onResume();
+	
+        myLocationOverlay.enableMyLocation();
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
@@ -180,7 +203,9 @@ public class ShowMap extends MapActivity {
 		}else{
 			mapView.setSatellite(false);			
 		}
-		
+		updateDogs();
+
+
 	}
 	@Override
     protected void onStop(){
@@ -196,18 +221,19 @@ public class ShowMap extends MapActivity {
     }
 	@Override
 	protected void onPause() {
+        //---unregister the receiver---
+     //   unregisterReceiver(intentReceiver);
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
 		myLocationOverlay.disableCompass();
 	}
-	/*
 	@Override
 	protected void onDestroy() {
-	    super.onDestroy();
+		unregisterReceiver(intentReceiver);
+		super.onDestroy();
 	    System.runFinalizersOnExit(true);
 	    System.exit(0);
 	}
-	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -241,9 +267,13 @@ public class ShowMap extends MapActivity {
 			sendSms();
 			//Toast.makeText(getApplicationContext(), "Saadan sõnumi", Toast.LENGTH_LONG).show();
 			return true;
-		case R.id.exit:
-			this.finish();
-			this.moveTaskToBack(true);
+		case R.id.about:
+			openAbout();
+			//this.finish();
+			//this.moveTaskToBack(true);
+			return true;
+		case R.id.refresh:
+			updateDogs();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -254,6 +284,11 @@ public class ShowMap extends MapActivity {
                             Preferences.class);
             startActivity(settingsActivity);
     }
+	private void openAbout() {
+        Intent aboutActivity = new Intent(getBaseContext(),
+                        About.class);
+        startActivity(aboutActivity);
+	}
 	private void sendSms() {
 		CharSequence text;
 		if (rihma_nr == null) {			
@@ -291,7 +326,8 @@ public class ShowMap extends MapActivity {
 		
 		
 	}
-	 public List<String> getSms() {
+
+	public List<String> getSms() {
 	        Uri mSmsQueryUri = Uri.parse("content://sms/inbox");
 	        List<String> messages = new ArrayList<String>();
 	        Cursor cursor = null;
@@ -303,7 +339,23 @@ public class ShowMap extends MapActivity {
 
 	            for (boolean hasData = cursor.moveToFirst(); hasData; hasData = cursor.moveToNext()) {
 	                final String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-	                messages.add(body);
+	    			final Long date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
+	    			final String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
+	    			// read = 0-lugemata 1-loetud
+	    			boolean sisu=body.startsWith(sms_start);
+	    			if (sisu){
+	    				DateFormat formatter = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+	    				Calendar calendar = Calendar.getInstance();
+	    				calendar.setTimeInMillis(date);
+	    				String kuup = formatter.format(calendar.getTime());
+	    				dog_position = extractCoords(body);
+	    				int lat = dog_position.getLatitudeE6();
+	    				int lng = dog_position.getLongitudeE6(); 
+		                messages.add(kuup);
+	    				messages.add(body);
+	    				
+	    			}
+
 	            }
 	        } catch (Exception e) {
 
@@ -312,8 +364,20 @@ public class ShowMap extends MapActivity {
 	        }
 	        return messages;
 	}
-	
+	public void updateDogs(){
+		mapView.getOverlays().remove(dogoverlay);
+		//mapView.invalidate();
+		sms_jrk=0;
+		readDogsSMS();
+	}
 	public void readDogsSMS(){
+		boolean is_point = true;
+		String title = null;
+		String snippet = null;
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		Boolean track_line = prefs.getBoolean("track_line", false);
+		
 		// sõnumite lugemine postkastist
 		Uri uri = Uri.parse("content://sms/inbox");
 		Cursor cursor = getApplicationContext().getContentResolver().query(uri, null, null, null, null);
@@ -321,29 +385,71 @@ public class ShowMap extends MapActivity {
 		  // Retrieve sms
 		  // see column "address" for comparing
 			String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-			String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
-			String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+			Long date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
 			String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
+			// read = 0-lugemata 1-loetud
 			boolean sisu=body.startsWith(sms_start);
 			if (sisu){
-				dog_position = extractCoords(body);
-				int lat = dog_position.getLatitudeE6();
-				int lng = dog_position.getLongitudeE6(); 
-				sms_jrk++;
-				String title = "Koer" + date + ":" + read + ":" + status + ":" + sms_jrk;
-				String snippet = "lat " + lat + " lng " + lng;
-			    dogMarker(dog_position,title,snippet);
-				mapController.animateTo(dog_position);
+				DateFormat formatter = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(date);
+				String kuup = formatter.format(calendar.getTime());
+				GeoPoint tmp_position = extractCoords(body);
+				int lat = tmp_position.getLatitudeE6();
+				int lng = tmp_position.getLongitudeE6(); 
+				snippet = kuup + "\n" + "lat " + lat + " lng " + lng;
+				if (my_position != null) {						
+					int distance = getDistance(tmp_position,my_position);
+					snippet += "\nKaugus on " + distance  + " meetrit";
+				}else{
+					snippet += "\nKaugus puudub";	
+				}
+				// joonistan esimese punkti koera
+				if (is_point) {
+				    is_point = false;
+					title = "Koera asukoht";
+				    dog_position=tmp_position;
+					dogMarker(dog_position,title,snippet);
+				    mapController.animateTo(dog_position);
+				}else{
+				// kui veel siis joonistan ka jooned
+					sms_jrk++;
+					title = "Koer jrk: " + sms_jrk;
+					if (track_line){
+						// joonista joon, aga praegu ei oska ja panen lihtsalt koera markeri
+					    dogMarker(tmp_position,title,snippet);
+					}
+				}
 			}	
 			//Toast.makeText(getApplicationContext(), address + rihma_nr, Toast.LENGTH_LONG).show();
 		  // Then update the sms and set the column "read" to 1
 		}
+
 	}
-	 
-	public void setDog(String sms, String title, String snippet){
-		dog_position = extractCoords(sms);
-	    dogMarker(dog_position,title,snippet);
-		mapController.animateTo(dog_position);
+	public int getDistance(GeoPoint start, GeoPoint end){
+		int R = 6371; // km
+		int lat = start.getLatitudeE6();
+		int lng = start.getLongitudeE6(); 		
+		int lat1 = end.getLatitudeE6();
+		int lng1 = end.getLongitudeE6(); 
+		// Approximate Equirectangular -- works if (lat1,lon1) ~ (lat2,lon2)
+		double x = (lng - lng1) * Math.cos((lat1 + lat) / 2);
+		double y = (lat - lat1);
+		double d = Math.sqrt(x * x + y * y) * R;
+
+		Location locationA = new Location("point A");
+		locationA.setLatitude(Double.valueOf(lat)/1e6);
+		locationA.setLongitude(Double.valueOf(lng)/1e6);
+
+		Location locationB = new Location("point B");
+
+		locationB.setLatitude(Double.valueOf(lat1)/1e6);
+		locationB.setLongitude(Double.valueOf(lng1)/1e6);
+
+		float distance = locationA.distanceTo(locationB);
+		
+		return (int) distance;
+	
 	}
 	private int getMicroDegrees(String coord) {
 		int m = 1000000;

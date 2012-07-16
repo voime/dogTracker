@@ -2,7 +2,8 @@
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference android:summary="Vali siit kaelarihma number" android:key="number" android:title="Vali number"></EditTextPreference>
-    <CheckBoxPreference android:title="Kompass" android:key="compass" android:summary="Näita kompassi" android:enabled="true"></CheckBoxPreference>
+    <CheckBoxPreference android:title="Kompass" android:key="compass" android:summary="Näitab ekraanil kompassi" android:enabled="true"></CheckBoxPreference>
+    <CheckBoxPreference android:title="Joon" android:key="track_line" android:summary="Näitab joont eelnevate koera asukohtade vahel" android:enabled="true"></CheckBoxPreference>
     <ListPreference android:title="Vaade" android:summary="Kaardi või Satteliit" 
         android:key="maptype" android:entries="@array/maptypeArray" android:entryValues="@array/maptypeValues" android:defaultValue="1"/>  
 </PreferenceScreen>

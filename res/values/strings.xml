@@ -9,5 +9,6 @@
 	   <item>1</item>  
 	   <item>2</item>  
 	</string-array>
-	<string name="set_preferences">Seaded</string> 
+	<string name="set_preferences">Seaded</string>
+	<string name="sms">sms</string> 
 </resources>
