@@ -9,6 +9,8 @@ package com.voime.koeraradar;
 
 public final class R {
     public static final class array {
+        public static final int dogiconArray=0x7f060002;
+        public static final int dogiconValues=0x7f060003;
         public static final int maptypeArray=0x7f060000;
         public static final int maptypeValues=0x7f060001;
     }
@@ -32,6 +34,7 @@ public final class R {
     public static final class layout {
         public static final int about=0x7f030000;
         public static final int main=0x7f030001;
+        public static final int osm=0x7f030002;
     }
     public static final class menu {
         public static final int options=0x7f070000;

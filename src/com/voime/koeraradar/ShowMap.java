@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,11 +55,7 @@ public class ShowMap extends MapActivity {
 	public String maptype;
 	private String sms = "?LOC";
 	private String sms_start = "!LOC";
-	private String re_sms2 = "!LOC_01/01_NORM_095%_GPS_1_N58.31.53,0_E026.52.31,1_18.07.2011_11:27:11_000KM/H_000DEG_*JAb*JEL*IAA/AAAZn*EF4GAAEABej/AADAA9cIAADAA8DqAAAAA8cIAAAAA8";
-	private String re_sms = "!LOC_01/01_NORM_096%_GPS_1_N58.53.29,7_E026.16.22,4_26.02.2011_08:16:05_000KM/H_000DEG_*JAS*JEA*IAA/AAAKP";
-	
-	private int sms_jrk;
-	
+	public boolean follow_me = true;
 	
 	IntentFilter intentFilter;
 	private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
@@ -75,18 +70,18 @@ public class ShowMap extends MapActivity {
 		super.onCreate(bundle);
 		setContentView(R.layout.main); // bind the layout to the activity
         //---intent to filter for SMS messages received---
-       
+		Drawable dogdrawable;
 		intentFilter = new IntentFilter();
         intentFilter.addAction("SMS_RE");
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		//maptype = prefs.getString("maptype", null);
+		String dogicon = prefs.getString("dogicon", "1");
 		rihma_nr = prefs.getString("number", null);
-		if (rihma_nr != null){
-			Toast.makeText(getApplicationContext(), "Number on  " + rihma_nr, Toast.LENGTH_LONG).show();
-		}else{
+		if (rihma_nr == null){
 			Toast.makeText(getApplicationContext(), "Määra seadete alt rihma number", Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(getApplicationContext(), "Number on  " + rihma_nr, Toast.LENGTH_LONG).show();
 		}
 		// Configure the Map
 
@@ -112,12 +107,20 @@ public class ShowMap extends MapActivity {
 		});
 
 		my_position = myLocationOverlay.getMyLocation();
+		/*
 		Drawable mydrawable = this.getResources().getDrawable(R.drawable.point);
 		myoverlay = new MyOverlays(this, mydrawable);
 		createMarker();
-
+*/
 		// üritan sama asja teha koera punkti panekuks
-		Drawable dogdrawable = this.getResources().getDrawable(R.drawable.dog);
+		if (dogicon.equals("3")){
+			dogdrawable = this.getResources().getDrawable(R.drawable.ic_launcher);
+		}else if (dogicon.equals("2")){
+			dogdrawable = this.getResources().getDrawable(R.drawable.point);			
+		}else{
+			dogdrawable = this.getResources().getDrawable(R.drawable.dog);
+		}
+		//Toast.makeText(getApplicationContext(), "Ikoon  " + dogicon, Toast.LENGTH_LONG).show();
 		dogoverlay = new DogOverlay(dogdrawable,this);
 		
 		registerReceiver(intentReceiver, intentFilter);
@@ -137,7 +140,9 @@ public class ShowMap extends MapActivity {
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
 			//createMarker();
-			//mapController.animateTo(point); // mapController.setCenter(point);
+			if (follow_me) {
+				mapController.animateTo(point); // mapController.setCenter(point);	
+			}
 			my_position = point;
 			//Toast.makeText(getApplicationContext(), "liikus: " + point, Toast.LENGTH_LONG).show();
 			TextView txt = (TextView)findViewById(R.id.MyTextView);			
@@ -179,44 +184,36 @@ public class ShowMap extends MapActivity {
 			mapView.getOverlays().add(dogoverlay);
 		}
 	}
-	
 	@Override
 	protected void onResume() {
 		 //---register the receiver---
        // registerReceiver(intentReceiver, intentFilter);
         super.onResume();
-	
         myLocationOverlay.enableMyLocation();
-
-		SharedPreferences prefs = PreferenceManager
+		
+        SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		String maptype = prefs.getString("maptype", null);
+		String maptype = prefs.getString("maptype", "1");
 		Boolean compass = prefs.getBoolean("compass", true);
 		if (compass) {
 			myLocationOverlay.enableCompass();
 		}
-		//Toast.makeText(getApplicationContext(), "onResume " + maptype, Toast.LENGTH_LONG).show();
-		// Configure the Map
 		
 		if (maptype.equals("2")){
 			mapView.setSatellite(true);
 		}else{
 			mapView.setSatellite(false);			
 		}
+		
 		updateDogs();
-
-
+		
 	}
 	@Override
     protected void onStop(){
        super.onStop();
-
-      // We need an Editor object to make preference changes.
-      // All objects are from android.context.Context
       SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
       SharedPreferences.Editor editor = settings.edit();
       editor.putInt("zoom", mapView.getZoomLevel());
-      // Commit the edits!
       editor.commit();
     }
 	@Override
@@ -254,18 +251,19 @@ public class ShowMap extends MapActivity {
 				Toast.makeText(getApplicationContext(), "Mina asun: " + my_position, Toast.LENGTH_LONG).show();
 				mapController.animateTo(my_position);
 			}
+			follow_me = true;
 			return true;
 		case R.id.dogpos:
 			if (dog_position == null) {
-				Toast.makeText(getApplicationContext(), "Ei ole teada, vajuta enne saada nuppu!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Ei ole teada, vajuta enne SMS nuppu!", Toast.LENGTH_LONG).show();
 			}else{
 				Toast.makeText(getApplicationContext(), "Koera asukoht: " + dog_position, Toast.LENGTH_LONG).show();
 				mapController.animateTo(dog_position);				
 			}
+			follow_me = false;
 			return true;
 		case R.id.send:
 			sendSms();
-			//Toast.makeText(getApplicationContext(), "Saadan sõnumi", Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.about:
 			openAbout();
@@ -291,40 +289,14 @@ public class ShowMap extends MapActivity {
 	}
 	private void sendSms() {
 		CharSequence text;
-		if (rihma_nr == null) {			
-			rihma_nr = "+37253268656";
-			text = "Number on määramata, kasutan vaikimisi numbrit " + rihma_nr;
+		if (rihma_nr == null) {			;
+			Toast.makeText(getApplicationContext(), "SMS ei saadeta, kuna pole rihma numbrit määratud!", Toast.LENGTH_LONG).show();
 		} else {
-			text = "Saadan sõnumi " + rihma_nr;
+			Toast.makeText(getApplicationContext(), "Saadan SMS kora asukoha uuendamiseks\n" + rihma_nr, Toast.LENGTH_LONG).show();
+			// sõnumi saatmine
+			SmsManager smsManager = SmsManager.getDefault();
+			smsManager.sendTextMessage(rihma_nr, null, sms, null, null);
 		}
-		// popupi näitamine
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-		
-		// sõnumi saatmine
-		SmsManager smsManager = SmsManager.getDefault();
-		smsManager.sendTextMessage(rihma_nr, null, sms, null, null);
-		//Toast.makeText(getApplicationContext(), "Saabund sõnum: " + re_sms, Toast.LENGTH_LONG).show();
-	    
-		
-	    //dog_position = extractCoords(re_sms);
-		/*
-		int lat = (int) ((58+Math.random()) * 1E6);
-		int lng = (int) ((26+Math.random()) * 1E6);
-		dog_position = new GeoPoint(lat,lng);
-		sms_jrk++;
-		String title = "Koer jrk:" + sms_jrk;
-		String snippet = "lat " + lat + " lng " + lng;
-	    dogMarker(dog_position,title,snippet);
-		mapController.animateTo(dog_position);
-	    
-		/*
-		String teade = "Koer jrk:" + sms_jrk;
-		sms_jrk++;
-		setDog(re_sms,teade,re_sms);
-		*/
-		
-		
-		
 	}
 
 	public List<String> getSms() {
@@ -367,17 +339,16 @@ public class ShowMap extends MapActivity {
 	public void updateDogs(){
 		mapView.getOverlays().remove(dogoverlay);
 		//mapView.invalidate();
-		sms_jrk=0;
 		readDogsSMS();
 	}
 	public void readDogsSMS(){
 		boolean is_point = true;
 		String title = null;
 		String snippet = null;
+		int sms_jrk = 0;
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		Boolean track_line = prefs.getBoolean("track_line", false);
-		
 		// sõnumite lugemine postkastist
 		Uri uri = Uri.parse("content://sms/inbox");
 		Cursor cursor = getApplicationContext().getContentResolver().query(uri, null, null, null, null);
@@ -427,37 +398,24 @@ public class ShowMap extends MapActivity {
 
 	}
 	public int getDistance(GeoPoint start, GeoPoint end){
-		int R = 6371; // km
 		int lat = start.getLatitudeE6();
 		int lng = start.getLongitudeE6(); 		
 		int lat1 = end.getLatitudeE6();
 		int lng1 = end.getLongitudeE6(); 
-		// Approximate Equirectangular -- works if (lat1,lon1) ~ (lat2,lon2)
-		double x = (lng - lng1) * Math.cos((lat1 + lat) / 2);
-		double y = (lat - lat1);
-		double d = Math.sqrt(x * x + y * y) * R;
-
 		Location locationA = new Location("point A");
 		locationA.setLatitude(Double.valueOf(lat)/1e6);
 		locationA.setLongitude(Double.valueOf(lng)/1e6);
-
 		Location locationB = new Location("point B");
-
 		locationB.setLatitude(Double.valueOf(lat1)/1e6);
 		locationB.setLongitude(Double.valueOf(lng1)/1e6);
-
 		float distance = locationA.distanceTo(locationB);
-		
 		return (int) distance;
-	
 	}
 	private int getMicroDegrees(String coord) {
 		int m = 1000000;
-
 		int firstPoint = coord.indexOf(".");
 		int secondPoint = coord.indexOf(".", firstPoint + 1);
 		int comma = coord.indexOf(",");
-
 		String sdegrees = coord.substring(0, firstPoint);
 		String sminutes = coord.substring(firstPoint + 1, secondPoint);
 		String sseconds1 = coord.substring(secondPoint + 1, comma);
@@ -465,27 +423,20 @@ public class ShowMap extends MapActivity {
 		int degrees = Integer.valueOf(sdegrees) * m;
 		int minutes = Integer.valueOf(sminutes) * m / 60;
 		int seconds = (int) (Double.valueOf(sseconds1 + "." + sseconds2) * m / (60 * 60));
-
 		int microDegrees = degrees + minutes + seconds;
-
 		return microDegrees;
 	}
 	private GeoPoint extractCoords(String loc) {
 		int latitudeE6;
 		int longitudeE6;
-
 		int startLat = loc.indexOf("GPS_1_N") + 7;
 		int endLat = startLat + 10;
 		int startLon = loc.indexOf("_E") + 2;
 		int endLon = startLon + 11;
-
-
 		String sLat = loc.substring(startLat, endLat);
 		String sLon = loc.substring(startLon, endLon);
-
 		latitudeE6 = getMicroDegrees(sLat);
 		longitudeE6 = getMicroDegrees(sLon);
-
 		GeoPoint point = new GeoPoint(latitudeE6, longitudeE6);
 		return point;
 	}

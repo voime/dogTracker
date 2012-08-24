@@ -1,9 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:title="Seaded" android:id="@+id/settings"></item>
-   <item android:title="SMS" android:id="@+id/send"></item>
+   <item android:id="@+id/settings" android:title="Seaded"></item>
+   <item android:id="@+id/send" android:title="SMS"></item>
    <item android:id="@+id/about" android:title="Teave"></item>
-    <item android:id="@+id/mypos" android:title="Mina"></item>
-    <item android:id="@+id/refresh" android:title="Uuenda"></item>
-    <item android:id="@+id/dogpos" android:title="Koer"></item>
-    
+   <item android:id="@+id/mypos" android:title="Mina"></item>
+   <item android:id="@+id/refresh" android:title="Uuenda"></item>
+   <item android:id="@+id/dogpos" android:title="Koer"></item>
 </menu>

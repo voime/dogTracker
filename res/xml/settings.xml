@@ -5,5 +5,7 @@
     <CheckBoxPreference android:title="Kompass" android:key="compass" android:summary="Näitab ekraanil kompassi" android:enabled="true"></CheckBoxPreference>
     <CheckBoxPreference android:title="Joon" android:key="track_line" android:summary="Näitab joont eelnevate koera asukohtade vahel" android:enabled="true"></CheckBoxPreference>
     <ListPreference android:title="Vaade" android:summary="Kaardi või Satteliit" 
-        android:key="maptype" android:entries="@array/maptypeArray" android:entryValues="@array/maptypeValues" android:defaultValue="1"/>  
+        android:key="maptype" android:entries="@array/maptypeArray" android:entryValues="@array/maptypeValues" android:defaultValue="1"/> 
+    <ListPreference android:title="Ikoon" android:summary="Koera ikoon" 
+        android:key="dogicon" android:entries="@array/dogiconArray" android:entryValues="@array/dogiconValues" android:defaultValue="1"/> 
 </PreferenceScreen>
