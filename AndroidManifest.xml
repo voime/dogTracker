@@ -37,6 +37,10 @@
         	android:name=".About"
         	android:label="About">
 		</activity>
+        <activity
+        	android:name=".Sendsms"
+        	android:label="Koera asukoha uuendamise sõnum">
+		</activity>
         <receiver android:name=".SMSReceiver">
 			<intent-filter>
 				<action android:name="android.provider.Telephony.SMS_RECEIVED" />

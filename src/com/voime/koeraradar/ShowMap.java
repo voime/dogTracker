@@ -39,7 +39,7 @@ public class ShowMap extends MapActivity {
     
 	public static final String PREFS_NAME = "koeraradar";
 	public MapController mapController;
-	private static MapView mapView;
+	MapView mapView = null;
 	private LocationManager locationManager;
 	private static MyOverlays myoverlay;
 	private MyLocationOverlay myLocationOverlay;
@@ -122,6 +122,12 @@ public class ShowMap extends MapActivity {
 		}
 		//Toast.makeText(getApplicationContext(), "Ikoon  " + dogicon, Toast.LENGTH_LONG).show();
 		dogoverlay = new DogOverlay(dogdrawable,this);
+		
+		/*
+		GeoPoint startGP= new GeoPoint(58890000,26270000);
+		GeoPoint endGP= new GeoPoint(58220000,26100000);
+		mapView.getOverlays().add(new DirectionPathOverlay(startGP, endGP));		
+		*/
 		
 		registerReceiver(intentReceiver, intentFilter);
 		
@@ -263,7 +269,8 @@ public class ShowMap extends MapActivity {
 			follow_me = false;
 			return true;
 		case R.id.send:
-			sendSms();
+			openSMS();
+			//sendSms();
 			return true;
 		case R.id.about:
 			openAbout();
@@ -287,6 +294,11 @@ public class ShowMap extends MapActivity {
                         About.class);
         startActivity(aboutActivity);
 	}
+	private void openSMS() {
+        Intent SMSActivity = new Intent(getBaseContext(),
+        		Sendsms.class);
+        startActivity(SMSActivity);
+	}
 	private void sendSms() {
 		CharSequence text;
 		if (rihma_nr == null) {			;
@@ -296,6 +308,7 @@ public class ShowMap extends MapActivity {
 			// sõnumi saatmine
 			SmsManager smsManager = SmsManager.getDefault();
 			smsManager.sendTextMessage(rihma_nr, null, sms, null, null);
+			
 		}
 	}
 
@@ -346,6 +359,8 @@ public class ShowMap extends MapActivity {
 		String title = null;
 		String snippet = null;
 		int sms_jrk = 0;
+		GeoPoint old_position = null;
+		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		Boolean track_line = prefs.getBoolean("track_line", false);
@@ -382,16 +397,21 @@ public class ShowMap extends MapActivity {
 				    dog_position=tmp_position;
 					dogMarker(dog_position,title,snippet);
 				    mapController.animateTo(dog_position);
+				    old_position=tmp_position;
 				}else{
 				// kui veel siis joonistan ka jooned
-					sms_jrk++;
-					title = "Koer jrk: " + sms_jrk;
+					//sms_jrk++;
+					//title = "Koer jrk: " + sms_jrk;
 					if (track_line){
 						// joonista joon, aga praegu ei oska ja panen lihtsalt koera markeri
-					    dogMarker(tmp_position,title,snippet);
+						mapView.getOverlays().add(new DirectionPathOverlay(old_position, tmp_position));
+						tmp_position=old_position;
+						//dogMarker(tmp_position,title,snippet);
 					}
 				}
 			}	
+			
+			
 			//Toast.makeText(getApplicationContext(), address + rihma_nr, Toast.LENGTH_LONG).show();
 		  // Then update the sms and set the column "read" to 1
 		}
