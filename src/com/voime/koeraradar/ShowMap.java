@@ -61,8 +61,8 @@ public class ShowMap extends MapActivity {
 	private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
 		        @Override
 		        public void onReceive(Context context, Intent intent) {
-		    		Toast.makeText(getApplicationContext(), "Saabus sõnum ja uuendan asukohta!", Toast.LENGTH_LONG).show();
 		        	updateDogs();
+		        	Toast.makeText(getApplicationContext(), "Saabus sõnum ja uuendan asukohta!", Toast.LENGTH_LONG).show();
 		        }
 	};
 	
@@ -361,6 +361,8 @@ public class ShowMap extends MapActivity {
 		int sms_jrk = 0;
 		GeoPoint old_position = null;
 		
+		//mapView.getOverlays().remove();
+		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		Boolean track_line = prefs.getBoolean("track_line", false);
@@ -375,7 +377,8 @@ public class ShowMap extends MapActivity {
 			String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
 			// read = 0-lugemata 1-loetud
 			boolean sisu=body.startsWith(sms_start);
-			if (sisu){
+			boolean sisu1=body.startsWith("!TRC"); // näitab ka mitmiksõnumit
+			if (sisu || sisu1){
 				DateFormat formatter = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTimeInMillis(date);
@@ -400,13 +403,13 @@ public class ShowMap extends MapActivity {
 				    old_position=tmp_position;
 				}else{
 				// kui veel siis joonistan ka jooned
-					//sms_jrk++;
-					//title = "Koer jrk: " + sms_jrk;
+					sms_jrk++;
+					title = "Koer jrk: " + sms_jrk;
 					if (track_line){
 						// joonista joon, aga praegu ei oska ja panen lihtsalt koera markeri
 						mapView.getOverlays().add(new DirectionPathOverlay(old_position, tmp_position));
-						tmp_position=old_position;
-						//dogMarker(tmp_position,title,snippet);
+						old_position=tmp_position;
+
 					}
 				}
 			}	
