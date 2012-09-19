@@ -3,10 +3,9 @@ dogTracker
 
 Tracker Hunter for Google maps and android
 
+This software works Dog collar GPS TTA-310i
+Orginalsofrware www.trackerhunter.com
+This software uses the Google map and is easy to use.
+Communicates with collar only by SMS messages.
 
-Toimib kaelarihmaga Tracker Dog GPS TTA-310i
-Orginaaltarkvara www.trackerhunter.com
-Nende aluskaart ja programmi keerukus aga ei sobinud ning pidasin seda ka liiga kalliks.
-See tarkvara kasutab Google kaarti ja on lihtne.
-Suhtleb rihmaga ainult sõnumite teel.
-Näitab koera asukohti kaardil sissetulnud sõnumite pealt. Kui tahad punkte kustutada telefonist vastavad kustuta sõnumid ära.
+This programm is Estonian language and free to use.
