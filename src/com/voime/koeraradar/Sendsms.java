@@ -42,7 +42,7 @@ public class Sendsms extends Activity {
 	public void sending (String text) {
 		SmsManager smsManager = SmsManager.getDefault();
 		smsManager.sendTextMessage(rihma_nr, null, text, null, null);
-		//Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), "Sending SMS: " + text, Toast.LENGTH_LONG).show();
 	}
 	// kui vajutati ühekordse SMS-i nuppu
     public void sendMessage(View view) {

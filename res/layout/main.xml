@@ -11,8 +11,9 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:background="#EC7703"
+    android:text="@string/title_activity_show_map"
     android:textColor="#000000"
-    android:text="@string/title_activity_show_map" />
+    android:textSize="25sp" />
 
 <com.google.android.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mapview"
