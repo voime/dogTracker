@@ -23,20 +23,21 @@ public final class R {
     }
     public static final class id {
         public static final int MyTextView=0x7f070000;
-        public static final int about=0x7f07000b;
+        public static final int about=0x7f07000c;
         public static final int button1=0x7f070003;
-        public static final int button2=0x7f070008;
-        public static final int dogpos=0x7f07000e;
-        public static final int editText1=0x7f070005;
-        public static final int editText2=0x7f070007;
+        public static final int button2=0x7f070009;
+        public static final int dogpos=0x7f07000f;
+        public static final int editText1=0x7f070006;
+        public static final int editText2=0x7f070008;
         public static final int mapview=0x7f070001;
-        public static final int mypos=0x7f07000c;
-        public static final int refresh=0x7f07000d;
-        public static final int send=0x7f07000a;
-        public static final int settings=0x7f070009;
-        public static final int textView1=0x7f070004;
-        public static final int textView2=0x7f070006;
+        public static final int mypos=0x7f07000d;
+        public static final int refresh=0x7f07000e;
+        public static final int send=0x7f07000b;
+        public static final int settings=0x7f07000a;
+        public static final int textView1=0x7f070005;
+        public static final int textView2=0x7f070007;
         public static final int textView3=0x7f070002;
+        public static final int textView4=0x7f070004;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -48,7 +49,16 @@ public final class R {
         public static final int options=0x7f060000;
     }
     public static final class string {
+        public static final int about1=0x7f040004;
+        public static final int about2=0x7f040005;
+        public static final int about3=0x7f040006;
         public static final int app_name=0x7f040000;
+        public static final int sendsms1=0x7f040007;
+        public static final int sendsms2=0x7f040008;
+        public static final int sendsms3=0x7f040009;
+        public static final int sendsms4=0x7f04000a;
+        public static final int sendsms5=0x7f04000b;
+        public static final int sendsms6=0x7f04000c;
         public static final int set_preferences=0x7f040002;
         public static final int sms=0x7f040003;
         public static final int title_activity_show_map=0x7f040001;

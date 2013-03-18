@@ -2,9 +2,9 @@
     package="com.voime.koeraradar"
     android:installLocation="preferExternal"
     android:versionCode="1"
-    android:versionName="1.2" >
+    android:versionName="1.5" >
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

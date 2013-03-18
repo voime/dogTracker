@@ -1,9 +1,7 @@
 package com.voime.koeraradar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,7 +16,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,10 +38,8 @@ public class ShowMap extends MapActivity {
 	public MapController mapController;
 	MapView mapView = null;
 	private LocationManager locationManager;
-	private static MyOverlays myoverlay;
 	private MyLocationOverlay myLocationOverlay;
 	private static DogOverlay dogoverlay;
-	private MyLocationOverlay dogLocationOverlay;	
 	
 	public static DogOverlay itemizedoverlay;
 	public static OverlayItem dog_overlayitem;
@@ -53,7 +48,6 @@ public class ShowMap extends MapActivity {
 	public GeoPoint dog_position;
 	public String rihma_nr;
 	public String maptype;
-	private String sms = "?LOC";
 	private String sms_start = "!LOC";
 	public boolean follow_me = true;
 	
@@ -107,11 +101,7 @@ public class ShowMap extends MapActivity {
 		});
 
 		my_position = myLocationOverlay.getMyLocation();
-		/*
-		Drawable mydrawable = this.getResources().getDrawable(R.drawable.point);
-		myoverlay = new MyOverlays(this, mydrawable);
-		createMarker();
-*/
+
 		// üritan sama asja teha koera punkti panekuks
 		if (dogicon.equals("3")){
 			dogdrawable = this.getResources().getDrawable(R.drawable.ic_launcher);
@@ -121,16 +111,8 @@ public class ShowMap extends MapActivity {
 			dogdrawable = this.getResources().getDrawable(R.drawable.dog);
 		}
 		//Toast.makeText(getApplicationContext(), "Ikoon  " + dogicon, Toast.LENGTH_LONG).show();
-		dogoverlay = new DogOverlay(dogdrawable,this);
-		
-		/*
-		GeoPoint startGP= new GeoPoint(58890000,26270000);
-		GeoPoint endGP= new GeoPoint(58220000,26100000);
-		mapView.getOverlays().add(new DirectionPathOverlay(startGP, endGP));		
-		*/
-		
+		dogoverlay = new DogOverlay(dogdrawable,this);		
 		registerReceiver(intentReceiver, intentFilter);
-		
 	}
 
 	@Override
@@ -175,14 +157,6 @@ public class ShowMap extends MapActivity {
 		}
 	}
 
-	private void createMarker() {
-		GeoPoint p = mapView.getMapCenter();
-		OverlayItem overlayitem = new OverlayItem(p, "", "");
-		myoverlay.addOverlay(overlayitem);
-		if (myoverlay.size() > 0) {
-			mapView.getOverlays().add(myoverlay);
-		}
-	}
 	private void dogMarker(GeoPoint point, String title, String snippet) {
 		OverlayItem dogoverlayitem = new OverlayItem(point, title, snippet);
 		dogoverlay.addOverlay(dogoverlayitem);
@@ -299,56 +273,6 @@ public class ShowMap extends MapActivity {
         		Sendsms.class);
         startActivity(SMSActivity);
 	}
-	private void sendSms() {
-		CharSequence text;
-		if (rihma_nr == null) {			;
-			Toast.makeText(getApplicationContext(), "SMS ei saadeta, kuna pole rihma numbrit määratud!", Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(getApplicationContext(), "Saadan SMS kora asukoha uuendamiseks\n" + rihma_nr, Toast.LENGTH_LONG).show();
-			// sõnumi saatmine
-			SmsManager smsManager = SmsManager.getDefault();
-			smsManager.sendTextMessage(rihma_nr, null, sms, null, null);
-			
-		}
-	}
-
-	public List<String> getSms() {
-	        Uri mSmsQueryUri = Uri.parse("content://sms/inbox");
-	        List<String> messages = new ArrayList<String>();
-	        Cursor cursor = null;
-	        try {
-	            cursor = getApplicationContext().getContentResolver().query(mSmsQueryUri, null, null, null, null);
-	            if (cursor == null) {
-	                return messages;
-	            }
-
-	            for (boolean hasData = cursor.moveToFirst(); hasData; hasData = cursor.moveToNext()) {
-	                final String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-	    			final Long date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
-	    			final String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
-	    			// read = 0-lugemata 1-loetud
-	    			boolean sisu=body.startsWith(sms_start);
-	    			if (sisu){
-	    				DateFormat formatter = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
-	    				Calendar calendar = Calendar.getInstance();
-	    				calendar.setTimeInMillis(date);
-	    				String kuup = formatter.format(calendar.getTime());
-	    				dog_position = extractCoords(body);
-	    				int lat = dog_position.getLatitudeE6();
-	    				int lng = dog_position.getLongitudeE6(); 
-		                messages.add(kuup);
-	    				messages.add(body);
-	    				
-	    			}
-
-	            }
-	        } catch (Exception e) {
-
-	        } finally {
-	            cursor.close();
-	        }
-	        return messages;
-	}
 	public void updateDogs(){
 		mapView.getOverlays().remove(dogoverlay);
 		//mapView.invalidate();
@@ -374,7 +298,7 @@ public class ShowMap extends MapActivity {
 		  // see column "address" for comparing
 			String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 			Long date = cursor.getLong(cursor.getColumnIndexOrThrow("date"));
-			String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
+			//String read = cursor.getString(cursor.getColumnIndexOrThrow("read"));
 			// read = 0-lugemata 1-loetud
 			boolean sisu=body.startsWith(sms_start);
 			boolean sisu1=body.startsWith("!TRC"); // näitab ka mitmiksõnumit

@@ -20,5 +20,25 @@
 	   <item>3</item>  
 	</string-array>
 	<string name="set_preferences">Seaded</string>
-	<string name="sms">sms</string> 
+	<string name="sms">sms</string>
+	<string name="about1">See on koeraradari programm.</string>
+	<string name="about2">Toimib kaelarihmaga Tracker Dog GPS TTA-310i
+Orginaaltarkvara www.trackerhunter.com
+Nende aluskaart ja programmi keerukus aga ei sobinud ning pidasin seda ka liiga kalliks.
+See tarkvara kasutab Google kaarti ja on lihtne.
+Suhtleb rihmaga ainult sõnumite teel.
+Näitab koera asukohti kaardil sissetulnud sõnumite pealt. Kui tahad punkte kustutada telefonist vastavad kustuta sõnumid ära.</string>
+	<string name="about3">Kui tahad ise ka arendada vaata 
+https://github.com/voime/dogTracker
+Ettepanekud avoime@gmail.com
+Kui tahad raha maksta siis
+Swedpank 1106558248
+Lugupidamisega Arvi Võime</string>
+	<string name="sendsms1">Mitu sõnumit saadetakse kokku tagasi</string>
+	<string name="sendsms2">Mitme minuti järelt saadetakse uus sõnum</string>
+	<string name="sendsms3">Saadetakse üks sõnum ja võetakse vastu üks sõnum</string>	
+	<string name="sendsms4">Saadetakse üks sõnum ja võetakse vastu mitu sõnumit</string>	
+	<string name="sendsms5">Saada ühekordne SMS	</string>	
+	<string name="sendsms6">Saada mitmekordne SMS</string>	
+		
 </resources>

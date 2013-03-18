@@ -6,10 +6,10 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#EC7703"
-        android:text="Saadetakse üks sõnum ja võetakse vastu üks sõnum"
+        android:text="@string/sendsms3"
         android:textColor="#000000"
         android:textSize="20sp" />
 
@@ -20,28 +20,28 @@
         android:layout_gravity="center"
         android:layout_weight="2"
         android:onClick="sendMessage"
-        android:text="Saada ühekordne SMS" />
+        android:text="@string/sendsms5" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView4"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#EC7703"
         android:layout_alignParentRight="true"
-        android:text="Saadetakse üks sõnum ja võetakse vastu mitu sõnumit"
+        android:background="#EC7703"
+        android:text="@string/sendsms4"
         android:textColor="#000000"
         android:textSize="20sp" />
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="Mitu sõnumit saadetakse kokku tagasi" />
+        android:text="@string/sendsms1" />
     
     <EditText
         android:id="@+id/editText1"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:ems="10"
@@ -50,13 +50,13 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Mitme minuti järelt saadetakse uus sõnum" />
+        android:text="@string/sendsms2" />
  
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:ems="10"
@@ -70,6 +70,6 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_weight="2"
         android:onClick="sendMulti"
-        android:text="Saada mitmekordne SMS" />
+        android:text="@string/sendsms6" />
 
 </LinearLayout>
