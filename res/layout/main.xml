@@ -19,7 +19,7 @@
     android:id="@+id/mapview"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:apiKey="0zOBcqw5-FVErO44_mNN1xAif2sBgjEc8_kicbg"
+    android:apiKey="0zOBcqw5-FVEl4H9ULwm8d1NL8G5wnAQ3ymSC0g"
     android:clickable="true"
     android:layout_below="@+id/MyTextView" />
 </RelativeLayout>
