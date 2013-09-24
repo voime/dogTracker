@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-<TextView
-    android:id="@+id/MyTextView"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true"
-    android:background="#EC7703"
-    android:text="@string/title_activity_show_map"
-    android:textColor="#000000"
-    android:textSize="25sp" />
+    <TextView
+        android:id="@+id/MyTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#EC7703"
+        android:text="@string/title_activity_show_map"
+        android:textColor="#000000"
+        android:textSize="25sp" />
 
-<com.google.android.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mapview"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:apiKey="0zOBcqw5-FVEl4H9ULwm8d1NL8G5wnAQ3ymSC0g"
-    android:clickable="true"
-    android:layout_below="@+id/MyTextView" />
+    <com.google.android.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:apiKey="0zOBcqw5-FVEl4H9ULwm8d1NL8G5wnAQ3ymSC0g"
+        android:clickable="true"
+        android:layout_below="@+id/MyTextView" />
 </RelativeLayout>

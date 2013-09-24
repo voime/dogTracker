@@ -21,7 +21,7 @@ class DirectionPathOverlay extends Overlay {
 
     @Override
     public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
-            long when) {
+                        long when) {
         // TODO Auto-generated method stub
         com.google.android.maps.Projection projection = mapView.getProjection();
         if (shadow == false) {
@@ -34,7 +34,7 @@ class DirectionPathOverlay extends Overlay {
             Point point2 = new Point();
             projection.toPixels(gp2, point2);
             paint.setStrokeWidth(1);
-            canvas.drawLine((float) point.x, (float) point.y, (float) point2.x,(float) point2.y, paint);
+            canvas.drawLine((float) point.x, (float) point.y, (float) point2.x, (float) point2.y, paint);
             canvas.drawCircle((float) point2.x, (float) point2.y, 3, paint);
         }
         return super.draw(canvas, mapView, shadow, when);
