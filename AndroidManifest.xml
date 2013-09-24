@@ -27,7 +27,7 @@
             android:name=".ShowMap"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_show_map"
-            android:theme="@android:style/Theme.NoTitleBar.Fullsceen">
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
